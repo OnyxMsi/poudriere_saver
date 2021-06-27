@@ -3,7 +3,7 @@ import itertools
 import os
 import attr
 import shutil
-from poudriere_saver.option_grammar import yacc
+from poudriere_saver import option_grammar
 
 LOGGER = logging.getLogger("pty")
 
@@ -93,7 +93,7 @@ def load_option_directories(option_dir):
                 "Load port %s/%s configuration from %s", category, name, opt_file
             )
             with open(opt_file) as fd:
-                c = yacc.parse(fd)
+                c = option_grammar.parse(fd)
             if category not in res:
                 res[category] = {name: c}
             else:
@@ -135,7 +135,7 @@ def load_make_conf_files(root_dir, jails, ports, sets):
             c["set"] = _set
         LOGGER.debug("Load configuration file %s", make_conf)
         with open(make_conf) as conf_fd:
-            c["conf"] = yacc.parse(conf_fd)
+            c["conf"] = option_grammar.parse(conf_fd)
         conf.append(c)
     return conf
 

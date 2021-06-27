@@ -10,7 +10,7 @@ setup(
     author_email="onyxmsi@laposte.com",
     license="GPL",
     packages=find_packages(),
-    install_requires=("pyyaml", "ply", "attrs"),
+    install_requires=("pyyaml", "attrs"),
     py_modules="poudriere_saver",
     zip_safe=False,
 )

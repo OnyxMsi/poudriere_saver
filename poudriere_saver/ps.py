@@ -11,8 +11,11 @@ LOGGER = logging.getLogger("pty")
 LOGLEVELS = (logging.WARNING, logging.INFO, logging.DEBUG)
 
 
+def get_lvl_from_int(value):
+    return LOGLEVELS[min(len(LOGLEVELS) - 1, max(value, 0))]
+
+
 def configure_logger(args):
-    lvl = LOGLEVELS[min(len(LOGLEVELS) - 1, max(args.verbose, 0))]
     data = {
         "version": 1,
         "formatters": {
@@ -24,13 +27,19 @@ def configure_logger(args):
                 "formatter": "formatter",
             }
         },
-        "loggers": {"pty": {"handlers": ["console"], "level": lvl}},
+        "loggers": {
+            "pty": {"handlers": ["console"], "level": get_lvl_from_int(args.verbose)},
+            "pty.parser": {
+                "handlers": ["console"],
+                "level": get_lvl_from_int(args.verbose - 1),
+            },
+        },
     }
     logging.config.dictConfig(data)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser("pty")
+    parser = argparse.ArgumentParser("poudsaver")
     parser.add_argument("-v", "--verbose", action="count", default=0)
     subparsers = parser.add_subparsers(required=True, dest="command")
     to_yaml_parser = subparsers.add_parser("export")
