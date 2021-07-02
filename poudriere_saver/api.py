@@ -188,7 +188,7 @@ def write_options(conf, dest_dir):
         else:
             LOGGER.debug("Create %s", dir_path)
         os.makedirs(dir_path)
-        for category in seg["ports"]:
+        for category in seg.get("ports", {}):
             for port, c in seg["ports"][category].items():
                 write_port_options(dir_path, category, port, c)
 
