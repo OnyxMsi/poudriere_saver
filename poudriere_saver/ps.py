@@ -51,6 +51,9 @@ def parse_args():
     to_directory_parser.add_argument("directory", help="Directory to create")
     to_directory_parser.add_argument("configuration", help="Configuration to read")
     to_directory_parser.set_defaults(func=_import)
+    clean_parser = subparsers.add_parser("clean")
+    clean_parser.add_argument("directory", help="Directory to clean in")
+    clean_parser.set_defaults(func=clean)
     args = parser.parse_args()
     return args
 
@@ -99,6 +102,15 @@ def export(args):
     LOGGER.debug("Write into %s", args.configuration)
     with open(args.configuration, "w") as fd:
         fd.write(yaml.dump(conf))
+    return 0
+
+
+def clean(args):
+    LOGGER.info("Clean configuration in %s", args.directory)
+    if not os.path.isdir(args.directory):
+        LOGGER.error("%s : no such directory", args.directory)
+        return 1
+    api.clean_directory(args.directory)
     return 0
 
 

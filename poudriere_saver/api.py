@@ -199,3 +199,18 @@ def write_make_conf(conf, dest_dir):
         file_path = os.path.join(dest_dir, get_segment_filename(seg, "make.conf"))
         LOGGER.debug("Write %s", file_path)
         write_conf_file(file_path, seg["conf"])
+
+
+CLEAN_DIRECTORY_IGNORE_FILENAMES = ("jails", "ports")
+
+
+def clean_directory(dir_path):
+    # Drop every file in directory but those which must remains to keep
+    # poudriere working
+    for n in os.listdir(dir_path):
+        if n not in CLEAN_DIRECTORY_IGNORE_FILENAMES:
+            path = os.path.join(dir_path, n)
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.unlink(path)
